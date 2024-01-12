@@ -305,7 +305,7 @@ function flattenArray(nestedArray) {
  *   selectMany(['one','two','three'], (x) => x.split('')) =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
 function selectMany(arr, childrenSelector) {
-  return arr.map(childrenSelector).flat();
+  return arr.flatMap(childrenSelector);
 }
 
 /**
@@ -341,12 +341,10 @@ function createChunks(arr, chunkSize) {
   if (chunkSize <= 0) {
     throw new Error('Chunk size should be greater than 0.');
   }
-  const chunks = [];
-  for (let i = 0; i < arr.length; i += chunkSize) {
-    chunks.push(arr.slice(i, i + chunkSize));
-  }
 
-  return chunks;
+  return Array.from({ length: Math.ceil(arr.length / chunkSize) }, (_, index) =>
+    arr.slice(index * chunkSize, (index + 1) * chunkSize)
+  );
 }
 
 /**
@@ -422,16 +420,9 @@ function getFalsyValuesCount(arr) {
  *                              [0,0,0,0,1]]
  */
 function getIdentityMatrix(n) {
-  const identityMatrix = [];
-
-  for (let i = 0; i < n; i += 1) {
-    const row = [];
-    for (let j = 0; j < n; j += 1) {
-      row.push(i === j ? 1 : 0);
-    }
-    identityMatrix.push(row);
-  }
-  return identityMatrix;
+  return Array.from({ length: n }, (_, i) =>
+    Array.from({ length: n }, (__, j) => (i === j ? 1 : 0))
+  );
 }
 
 /**
@@ -464,8 +455,12 @@ function getIndicesOfOddNumbers(numbers) {
  *    getHexRGBValues([ 0, 255, 16777215]) => [ '#000000', '#0000FF', '#FFFFFF' ]
  *    getHexRGBValues([]) => []
  */
-function getHexRGBValues(/* arr */) {
-  throw new Error('Not implemented');
+function getHexRGBValues(arr) {
+  return arr.map((num) => {
+    let hex = num.toString(16).toUpperCase();
+    hex = hex.padStart(6, '0');
+    return `#${hex}`;
+  });
 }
 
 /**
