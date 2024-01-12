@@ -209,7 +209,7 @@ function getHead(arr, n) {
  *    getTail([ 'a', 'b', 'c', 'd'], 0) => []
  */
 function getTail(arr, n) {
-  return arr.slice(-n);
+  return n === 0 ? [] : arr.slice(-n);
 }
 
 /**
@@ -225,7 +225,7 @@ function getTail(arr, n) {
  *    doubleArray([]) => []
  */
 function doubleArray(arr) {
-  return [...arr, ...arr];
+  return arr.concat(arr);
 }
 
 /**
@@ -337,8 +337,16 @@ function calculateBalance(/* arr */) {
  *    createChunks(['a', 'b', 'c', 'd', 'e'], 2) => [['a', 'b'], ['c', 'd'], ['e']]
  *    createChunks([10, 20, 30, 40, 50], 1) => [[10], [20], [30], [40], [50]]
  */
-function createChunks(/* arr, chunkSize */) {
-  throw new Error('Not implemented');
+function createChunks(arr, chunkSize) {
+  if (chunkSize <= 0) {
+    throw new Error('Chunk size should be greater than 0.');
+  }
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    chunks.push(arr.slice(i, i + chunkSize));
+  }
+
+  return chunks;
 }
 
 /**
@@ -353,8 +361,8 @@ function createChunks(/* arr, chunkSize */) {
  *    generateOdds(2) => [ 1, 3 ]
  *    generateOdds(5) => [ 1, 3, 5, 7, 9 ]
  */
-function generateOdds(/* len */) {
-  throw new Error('Not implemented');
+function generateOdds(len) {
+  return Array.from({ length: len }, (_, index) => 2 * index + 1);
 }
 
 /**
@@ -369,8 +377,13 @@ function generateOdds(/* len */) {
  *   getElementByIndices(['one','two','three'], [2]) => 'three'  (arr[2])
  *   getElementByIndices([[[ 1, 2, 3]]], [ 0, 0, 1 ]) => 2        (arr[0][0][1])
  */
-function getElementByIndices(/* arr, indices */) {
-  throw new Error('Not implemented');
+function getElementByIndices(arr, indices) {
+  if (indices.length === 0) {
+    return arr;
+  }
+  const currentIndex = indices[0];
+  const restOfIndices = indices.slice(1);
+  return getElementByIndices(arr[currentIndex], restOfIndices);
 }
 
 /**
@@ -385,8 +398,9 @@ function getElementByIndices(/* arr, indices */) {
  *  getFalsyValuesCount([ -1, 'false', null, 0 ]) => 2
  *  getFalsyValuesCount([ null, undefined, NaN, false, 0, '' ]) => 6
  */
-function getFalsyValuesCount(/* arr */) {
-  throw new Error('Not implemented');
+function getFalsyValuesCount(arr) {
+  const falsyValues = arr.filter((value) => !value);
+  return falsyValues.length;
 }
 
 /**
@@ -407,8 +421,17 @@ function getFalsyValuesCount(/* arr */) {
  *                              [0,0,0,1,0],
  *                              [0,0,0,0,1]]
  */
-function getIdentityMatrix(/* n */) {
-  throw new Error('Not implemented');
+function getIdentityMatrix(n) {
+  const identityMatrix = [];
+
+  for (let i = 0; i < n; i += 1) {
+    const row = [];
+    for (let j = 0; j < n; j += 1) {
+      row.push(i === j ? 1 : 0);
+    }
+    identityMatrix.push(row);
+  }
+  return identityMatrix;
 }
 
 /**
@@ -422,8 +445,13 @@ function getIdentityMatrix(/* n */) {
  *    getIndicesOfOddNumbers([2, 4, 6, 8, 10]) => []
  *    getIndicesOfOddNumbers([11, 22, 33, 44, 55]) => [0, 2, 4]
  */
-function getIndicesOfOddNumbers(/* numbers */) {
-  throw new Error('Not implemented');
+function getIndicesOfOddNumbers(numbers) {
+  return numbers.reduce((indices, num, index) => {
+    if (num % 2 !== 0) {
+      indices.push(index);
+    }
+    return indices;
+  }, []);
 }
 
 /**
@@ -537,8 +565,23 @@ function shiftArray(/* arr, n */) {
  *   sortDigitNamesByNumericOrder([ 'nine','eight','nine','eight' ]) => [ 'eight','eight','nine','nine']
  *   sortDigitNamesByNumericOrder([ 'one','one','one','zero' ]) => [ 'zero','one','one','one' ]
  */
-function sortDigitNamesByNumericOrder(/* arr */) {
-  throw new Error('Not implemented');
+function sortDigitNamesByNumericOrder(arr) {
+  const digitNames = [
+    'zero',
+    'one',
+    'two',
+    'three',
+    'four',
+    'five',
+    'six',
+    'seven',
+    'eight',
+    'nine',
+  ];
+
+  const digitIndex = (name) => digitNames.indexOf(name);
+
+  return arr.sort((a, b) => digitIndex(a) - digitIndex(b));
 }
 
 /**
